@@ -37,6 +37,10 @@ function moduleProject2() {
       row.appendChild(square)
       square.addEventListener('click', () => {
         // 👉 TASK 2 - Use a click handler to target a square 👈
+        if(!square.classList.contains('targeted')){
+          document.querySelector('.targeted').classList.remove('targeted')
+          square.classList.add('targeted')
+        }
       })
     }
   }
@@ -65,9 +69,60 @@ function moduleProject2() {
 
   document.addEventListener('keydown', evt => {
     // 👉 TASK 3 - Use the arrow keys to highlight a new square 👈
+    let upb=evt.key===keys.up
+    let downb=evt.key===keys.down
+    let fneutral=evt.key===keys.right
+    let bneutral=evt.key===keys.left
+    let finalf=evt.key===keys.space
+    let breaktarget=document.querySelector('.targeted')
+    if(upb){
+      if(breaktarget.parentElement.previousElementSibling){
+        let dexter=Array.from(breaktarget.parentElement.children).indexOf(breaktarget)
+        breaktarget.classList.remove('targeted')
+        breaktarget.parentElement.previousElementSibling.children[dexter].classList.add('targeted')
+      }
+    }else
+    if(downb){
+      if(breaktarget.parentElement.nextElementSibling){
+        let dexter=Array.from(breaktarget.parentElement.children).indexOf(breaktarget)
+        breaktarget.classList.remove('targeted')
+        breaktarget.parentElement.nextElementSibling.children[dexter].classList.add('targeted')
+      }
+    }else
+    if(fneutral){
+      if(breaktarget.nextElementSibling){
+        breaktarget.classList.remove('targeted')
+        breaktarget.nextElementSibling.classList.add('targeted')
+      }
+    }else
+    if(bneutral){
+      if(breaktarget.previousElementSibling){
+        breaktarget.classList.remove('targeted')
+        breaktarget.previousElementSibling.classList.add('targeted')
+      }
+    }
 
     // 👉 TASK 4 - Use the space bar to exterminate a mosquito 👈
-
+    else
+    if(finalf){
+      let squito=breaktarget.firstChild
+      if(squito&&squito.dataset.status==='alive'){
+        squito.dataset.status='dead'
+        squito.parentElement.style.backgroundColor='red'
+      }
+      let wholives=document.querySelectorAll('[data-status=alive]')
+      if(!wholives.length){
+        let toki=getTimeElapsed()
+        document.querySelector('p.info').textContent=`Extermination completed in ${toki/1000} seconds!`
+        let restart=document.createElement('button')
+        restart.textContent='Restart'
+        restart.addEventListener('click',()=>{
+          location.reload()
+        })
+        document.querySelector('h2').insertAdjacentElement('beforeend',restart)
+      }
+    }
+  
     // 👉 TASK 5 - End the game 👈
   })
   // 👆 WORK WORK ABOVE THIS LINE 👆
